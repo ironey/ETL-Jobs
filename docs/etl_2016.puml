@@ -1,0 +1,25 @@
+@startuml ETL_Process_2016
+skinparam backgroundColor transparent
+skinparam handwritten false
+
+rectangle "CSV File" as csv #LightYellow
+rectangle "Transform" as transform #LightBlue
+database "SQLite" as db #LightGreen
+
+csv -> transform: Extract
+transform -> db: Load
+
+note bottom of csv
+  Raw data in CSV format
+end note
+
+note bottom of transform
+  - Capitalize names
+  - Convert types
+end note
+
+note bottom of db
+  SQLite database
+  storing user data
+end note
+@enduml
