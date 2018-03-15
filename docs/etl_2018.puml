@@ -1,0 +1,34 @@
+@startuml ETL_Process_2018
+skinparam backgroundColor transparent
+
+rectangle "CSV File" as csv #LightYellow
+rectangle "Validation" as validate #Pink
+rectangle "Transform" as transform #LightBlue
+database "SQLite" as db #LightGreen
+rectangle "Error Logs" as errors #Red
+
+csv -> validate: Extract
+validate -> transform: Valid Data
+validate -> errors: Invalid Data
+transform -> db: Load
+errors -> [*]: Log Errors
+
+note bottom of validate
+  - Data type validation
+  - Required field checks
+  - Format validation
+end note
+
+note bottom of transform
+  - Capitalize names
+  - Data enrichment
+  - Type conversion
+end note
+
+note bottom of errors
+  Error logging with:
+  - Timestamp
+  - Error type
+  - Raw data
+end note
+@enduml
