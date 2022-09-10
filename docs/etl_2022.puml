@@ -1,0 +1,49 @@
+@startuml ETL_Process_2022
+skinparam backgroundColor transparent
+
+cloud "Data Sources" as sources {
+    rectangle "CSV Files" as csv1
+    rectangle "CSV Files" as csv2
+}
+
+rectangle "Data Quality" as quality #Purple {
+    rectangle "Schema Validation" as schema
+    rectangle "Data Profiling" as profile
+    rectangle "Quality Metrics" as metrics
+}
+
+rectangle "Processing" as processing {
+    rectangle "Validation Pool" as validate #Pink
+    rectangle "Transform Pool" as transform #LightBlue
+}
+
+database "SQLite" as db #LightGreen
+rectangle "Data Quality Dashboard" as dashboard #Orange {
+    rectangle "Quality Metrics" as qm
+    rectangle "Data Profiles" as dp
+    rectangle "Alerts" as alerts
+}
+
+sources --> quality: Raw Data
+quality --> processing: Validated Schema
+validate --> transform: Clean Data
+transform --> db: Load Data
+
+quality --> dashboard: Quality Reports
+db --> dashboard: Data Stats
+alerts --> [*]: Email Notifications
+
+note bottom of quality
+  - Schema validation
+  - Data profiling
+  - Completeness checks
+  - Consistency validation
+end note
+
+note bottom of dashboard
+  - Data quality metrics
+  - Trend analysis
+  - Alert management
+  - Performance monitoring
+end note
+@enduml
