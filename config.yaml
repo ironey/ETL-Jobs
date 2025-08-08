@@ -1,0 +1,14 @@
+aws:
+  region: us-west-2
+  s3_bucket: etl-data-lake
+  sqs_queue_url: https://sqs.us-west-2.amazonaws.com/123456789012/etl-queue
+
+database:
+  host: your-rds-instance.xxx.region.rds.amazonaws.com
+  name: etl_db
+  user: admin
+  password: ${DB_PASSWORD}  # Use environment variable
+
+monitoring:
+  prometheus_port: 8000
+  log_level: INFO

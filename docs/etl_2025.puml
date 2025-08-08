@@ -1,0 +1,66 @@
+@startuml ETL_Process_2025
+skinparam backgroundColor transparent
+
+cloud "Cloud Storage" as cloud {
+    rectangle "S3 Bucket" as s3 {
+        rectangle "Raw Data" as raw
+        rectangle "Processed Data" as processed
+    }
+}
+
+cloud "Message Queue" as queue {
+    queue "AWS SQS" as sqs
+}
+
+rectangle "ETL Pipeline" as etl {
+    rectangle "Data Quality" as quality #Purple
+    rectangle "Async Processor" as processor #Blue {
+        rectangle "Worker 1" as w1
+        rectangle "Worker 2" as w2
+        rectangle "Worker 3" as w3
+    }
+    rectangle "Transform" as transform #LightBlue
+}
+
+database "Cloud Database" as db {
+    database "Primary DB" as primary
+    database "Replica DB" as replica
+}
+
+rectangle "Monitoring" as monitor #Orange {
+    rectangle "AWS CloudWatch" as cloudwatch
+    rectangle "Grafana" as grafana
+}
+
+cloud --> sqs: File Upload Event
+sqs --> processor: Trigger Processing
+processor --> quality: Validate
+quality --> transform: Process
+transform --> processed: Store Results
+processed --> db: Load Data
+
+cloudwatch --> grafana: Metrics
+db --> grafana: Performance
+processor --> cloudwatch: Status
+
+note right of cloud
+  S3 bucket with 
+  versioning and 
+  lifecycle policies
+end note
+
+note bottom of processor
+  Async processing with
+  automatic scaling
+end note
+
+note bottom of db
+  Cloud-native database
+  with replication
+end note
+
+note right of monitor
+  Real-time monitoring
+  and alerting
+end note
+@enduml
